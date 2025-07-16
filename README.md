@@ -38,26 +38,30 @@ Built with modern technologies — C++ for high-performance file operations, Nod
 🔒 Secure-by-Design — End-to-end controlled data flow
 
 #
-## 🏗️ Architecture
+## 🏗️ Architecture - Multi-Language Microservice Design with End-to-End Encryption
+
 ~~~
-┌─────────────────────┐    ┌─────────────────────┐    ┌─────────────────────┐
-│   React Frontend    │    │   Node.js Backend   │    │   C++ Microservice  │
-│   (UI/UX Layer)     │◄──►│   (API Gateway)     │◄──►│   (File Operations) │
-│                     │    │                     │    │                     │
-│ • Chrome Extension  │    │ • Express.js        │    │ • Crow Framework    │
-│ • Tailwind CSS      │    │ • RESTful API       │    │ • High-Performance  │
-│ • Framer Motion     │    │ • CORS Handling     │    │ • File I/O          │
-│ • Local Storage     │    │ • Request Routing   │    │ • Memory Efficient  │
-└─────────────────────┘    └─────────────────────┘    └─────────────────────┘
+┌─────────────────────┐    ┌─────────────────────┐    ┌──────────────────────┐
+│   React Frontend    │    │   Node.js Backend   │    │   C++ Microservice   │
+│   (UI/UX Layer)     │◄──►│   (API Gateway)     │◄──►│   (File Operations)  │
+│                     │    │                     │    │                      │
+│ -  Chrome Extension │    │ -  Express.js       │    │ -  Crow Framework    │
+│ -  Tailwind CSS     │    │ -  RESTful API      │    │ -  High-Performance  │
+│ -  Framer Motion    │    │ -  CORS Handling    │    │ -  File I/O          │
+│ -  End-to-End Crypto│    │ -  Request Routing  │    │ -  Memory Efficient  │
+│ -  AES-256 Encrypted│    | -  Encrypted Storage│    │ -  Direct File Access│
+└─────────────────────┘    └─────────────────────┘    └──────────────────────┘
          │                           │                           │
          │                           ▼                           ▼
          │                  ┌─────────────────────┐    ┌─────────────────────┐
          │                  │    MongoDB Atlas    │    │   File System       │
          │                  │   (Metadata Store)  │    │   (Paste Storage)   │
          │                  │                     │    │                     │
-         │                  │ • Share Links       │    │ • .txt Files        │
-         │                  │ • Expiration Data   │    │ • Direct I/O        │
-         │                  │ • Access Tracking   │    │ • No Overhead       │
+         │                  │ -  Share Links      │    │ -  Encrypted .txt   │
+         │                  │ -  Expiration Data  │    │ -  Direct I/O       │
+         │                  │ -  Access Tracking  │    │ -  No Overhead      │
+         │                  │ -  Encryption Flags │    │ -  Secure Storage   │
+         │                  │ -  Encrypted Content│    │                     │
          │                  └─────────────────────┘    └─────────────────────┘
          │
          ▼
@@ -65,24 +69,74 @@ Built with modern technologies — C++ for high-performance file operations, Nod
 │   Chrome Storage    │
 │   (Local Cache)     │
 │                     │
-│ • Recent Pastes     │
-│ • User Preferences  │
-│ • Theme Settings    │
+│ -  Recent Pastes    │
+│ -  Encryption Keys  │
+│ -  User Preferences │
+│ -  Theme Settings   │
 └─────────────────────┘
+
 ~~~
 #
 ## 🌐 Production Deployment Architecture
 ~~~
-┌─────────────────────┐    ┌─────────────────────┐    ┌─────────────────────┐
-│   Chrome/Brave      │    │   Heroku Platform   │    │   Fly.io Platform   │
-│   Extension         │◄──►│   Node.js Backend   │◄──►│   C++ Microservice  │
-│                     │    │   (Global CDN)      │    │   (Edge Deployment) │
-│ • React Frontend    │    │ • Express.js API    │    │ • Crow Framework    │
-│ • Local Storage     │    │ • MongoDB Atlas     │    │ • File Operations   │
-│ • Theme Switching   │    │ • Auto-scaling      │    │ • Docker Container  │
-└─────────────────────┘    └─────────────────────┘    └─────────────────────┘
+┌──────────────────────┐    ┌─────────────────────┐    ┌─────────────────────┐
+│   Chrome/Brave       │    │   Heroku Platform   │    │   Fly.io Platform   │
+│   Extension          │◄──►│   Node.js Backend   │◄──►│   C++ Microservice  │
+│                      │    │   (Global CDN)      │    │   (Edge Deployment) │
+│ -  React Frontend    │    │ -  Express.js API   │    │ -  Crow Framework   │
+│ -  Client-Side Crypto│    │ -  MongoDB Atlas    │    │ -  File Operations  │
+│ -  Local Key Storage │    │ -  Zero-Knowledge   │    │ -  Docker Container │
+│ -  Theme Switching   │    │ -  Auto-scaling     │    │ -  Encrypted I/O    │
+│ -  Encrypted Shares  │    │ -  Secure Routing   │    │ -  Memory Efficient │
+└──────────────────────┘    └─────────────────────┘    └─────────────────────┘
+
 ~~~
 #
+
+## 🔐 End-to-End Encryption Flow
+~~~
+┌─────────────────────┐    ┌─────────────────────┐    ┌──────────────────────┐
+│   User Input        │    │   Client Encryption │    │   Server Storage     │
+│   (Plaintext)       │───►│   (AES-256 CBC)     │───►│   (Encrypted Data)   │
+│                     │    │                     │    │                      │
+│ -  Raw Text Content │    │ -  Generate Keys    │    │ -  Encrypted Files   │
+│ -  User Preferences │    │ -  Encrypt Locally  │    │ -  Encrypted Metadata│
+│ -  Theme Settings   │    │ -  Embed Keys in URL│    │ -  Share Links       │
+└─────────────────────┘    └─────────────────────┘    └──────────────────────┘
+         ▲                           │                           │
+         │                           ▼                           ▼
+         │                  ┌──────────────────────┐    ┌─────────────────────┐
+         │                  │   Secure Transport   │    │   Zero-Knowledge    │
+         │                  │   (HTTPS/TLS)        │    │   Server Storage    │
+         │                  │                      │    │                     │
+         │                  │ -  Encrypted Payload │    │ -  No Plaintext     │
+         │                  │ -  Secure Headers    │    │ -  Encrypted Keys   │
+         │                  │ -  Safe Transmission │    │ -  Metadata Only    │
+         │                  └──────────────────────┘    └─────────────────────┘
+         │                                                                 
+         └─────────────────────── Decrypt on Import ◄──────────────────────┘
+~~~
+#
+
+## 🔐 Security & Privacy
+- 🔒 **End-to-End Encryption** — AES-256 CBC with client-side key management
+- 🔐 **Zero-Knowledge Architecture** — Servers never see plaintext content (when encrypted)
+- ⏱️ **Temporary Links** — Auto-expiring after 24 hours (default)
+- 🛡️ **Secure Share Links** — Encryption keys embedded in share URLs
+- 🏠 **Browser-Local Keys** — Encryption keys stored only in your browser
+- 🌐 **HTTPS Transport** — All API calls encrypted in transit
+
+#
+
+## Why CBC Mode for BinStack:
+- **🔒 Proven Security**: CBC is battle-tested AES block cipher mode
+- **📱 Universal Support**: Works with CryptoJS library out-of-the-box
+- **⚡ Performance**: Efficient for paste-sized data (< 1MB)
+- **🔐 Random IV**: Each encryption uses unique initialization vector
+- **🛡️ Block Chaining**: Each ciphertext block depends on previous blocks
+
+#
+
 ## ❓ Why C++ for the Microservice? -  Sub-Millisecond Response Times — 10x faster file ops vs Node.js
 
 - 💾 Memory Efficient — Lightweight and high-throughput
