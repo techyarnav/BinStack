@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const pasteSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   filename: { type: String, required: true },

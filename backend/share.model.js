@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const shareSchema = new mongoose.Schema({
   shareId: { type: String, required: true, unique: true },
   pasteId: { type: String, required: true },
