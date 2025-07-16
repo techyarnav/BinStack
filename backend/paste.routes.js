@@ -1,13 +1,10 @@
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
 const axios = require('axios');
 const Paste = require('./mongo.model');
 const Share = require('./share.model');
 
 const router = express.Router();
 
-// Function to generate 8-char unique ID
 function generateId() {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let id = '';
@@ -15,7 +12,6 @@ function generateId() {
   return id;
 }
 
-// Function to generate 12-char share ID
 function generateShareId() {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let id = '';
@@ -32,16 +28,13 @@ router.post('/paste', async (req, res) => {
       return res.status(413).json({ error: 'Paste too large (max 1MB).' });
 
     const id = generateId();
-    const filename = `pastes/${id}.txt`;
-
+    
     const crowRes = await axios.post(
       process.env.CROW_SERVICE_URL + '/save',
       { id, content }
     );
-    if (crowRes.data.status !== 'saved')
-      return res.status(500).json({ error: 'Failed to save file.' });
 
-    await Paste.create({ id, filename });
+    await Paste.create({ id, filename: `pastes/${id}.txt` });
 
     res.json({ id });
   } catch (err) {
@@ -57,11 +50,15 @@ router.post('/share', async (req, res) => {
     if (!pasteId || typeof pasteId !== 'string' || pasteId.length !== 8)
       return res.status(400).json({ error: 'Valid paste ID is required.' });
 
-    const filename = path.join(__dirname, '..', 'pastes', `${pasteId}.txt`);
-    if (!fs.existsSync(filename))
+    const paste = await Paste.findOne({ id: pasteId });
+    if (!paste)
       return res.status(404).json({ error: 'Paste not found.' });
 
-    const content = fs.readFileSync(filename, 'utf8');
+    const crowRes = await axios.get(
+      process.env.CROW_SERVICE_URL + '/get/' + pasteId
+    );
+    
+    const content = crowRes.data.content;
     
     const shareId = generateShareId();
     const expiresAt = new Date(Date.now() + (expirationHours * 60 * 60 * 1000));
@@ -121,12 +118,12 @@ router.get('/import/:shareId', async (req, res) => {
 router.get('/p/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const filename = path.join(__dirname, '..', 'pastes', `${id}.txt`);
     
-    if (!fs.existsSync(filename))
-      return res.status(404).send('Paste not found.');
-
-    const content = fs.readFileSync(filename, 'utf8');
+    const crowRes = await axios.get(
+      process.env.CROW_SERVICE_URL + '/get/' + id
+    );
+    
+    const content = crowRes.data.content;
 
     res.send(`
       <!DOCTYPE html>
