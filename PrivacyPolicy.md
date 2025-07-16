@@ -14,4 +14,4 @@ BinStack does not collect, store, or transmit any personal data to external serv
 • Host permissions: For connecting to backend server
 
 ## Contact
-For questions: your-email@example.com
+For questions: techyarnav@gmail.com
