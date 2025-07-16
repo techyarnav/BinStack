@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
+
 const pasteSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   filename: { type: String, required: true },
-  encrypted: { type: Boolean, default: false }, 
+  encrypted: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
+
+module.exports = mongoose.model('Paste', pasteSchema);

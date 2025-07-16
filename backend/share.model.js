@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const shareSchema = new mongoose.Schema({
   shareId: { type: String, required: true, unique: true },
   pasteId: { type: String, required: true },
@@ -9,3 +10,5 @@ const shareSchema = new mongoose.Schema({
   maxAccess: { type: Number, default: 100 },
   createdAt: { type: Date, default: Date.now }
 });
+
+module.exports = mongoose.model('Share', shareSchema);
