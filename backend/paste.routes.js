@@ -21,7 +21,7 @@ function generateShareId() {
 
 router.post('/paste', async (req, res) => {
   try {
-    const { content } = req.body;
+    const { content, encrypted = false } = req.body;
     if (!content || typeof content !== 'string' || content.length === 0)
       return res.status(400).json({ error: 'Content is required.' });
     if (Buffer.byteLength(content, 'utf8') > 1024 * 1024)
@@ -34,7 +34,7 @@ router.post('/paste', async (req, res) => {
       { id, content }
     );
 
-    await Paste.create({ id, filename: `pastes/${id}.txt` });
+    await Paste.create({ id, filename: `pastes/${id}.txt`, encrypted: encrypted });
 
     res.json({ id });
   } catch (err) {
@@ -67,6 +67,7 @@ router.post('/share', async (req, res) => {
       shareId,
       pasteId,
       content,
+      encrypted: paste.encrypted,
       expiresAt
     });
 
