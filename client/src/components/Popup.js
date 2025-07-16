@@ -20,7 +20,8 @@ import clsx from "clsx";
 import { useTheme } from "../contexts/ThemeContext";
 import ThemeToggle from "./ThemeToggle";
 
-const BACKEND_URL = "http://localhost:3001";
+// const BACKEND_URL = "http://localhost:3001";
+const BACKEND_URL = "https://binstack-backend-59021fc50595.herokuapp.com"; // Backend URL for production (Deployed on Heroku)
 
 const Popup = () => {
   const { isDark } = useTheme();
