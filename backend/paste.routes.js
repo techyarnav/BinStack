@@ -132,7 +132,7 @@ router.get('/p/:id', async (req, res) => {
       <!DOCTYPE html>
       <html>
       <head>
-        <title>Pastebin Lite - ${id}</title>
+        <title>BinStack - ${id}</title>
         <meta charset="utf-8">
         <script src="https://cdn.tailwindcss.com"></script>
       </head>
