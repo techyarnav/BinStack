@@ -5,8 +5,7 @@ import {
   Copy, 
   Check, 
   History, 
-  Trash2, 
-  ExternalLink,
+  Trash2,
   AlertCircle,
   Clipboard,
   Share2,
@@ -20,8 +19,10 @@ import clsx from "clsx";
 import { useTheme } from "../contexts/ThemeContext";
 import ThemeToggle from "./ThemeToggle";
 
+
 // const BACKEND_URL = "http://localhost:3001";
 const BACKEND_URL = "https://binstack-backend-59021fc50595.herokuapp.com"; // Backend URL for production (Deployed on Heroku)
+
 
 const Popup = () => {
   const { isDark } = useTheme();
@@ -38,48 +39,50 @@ const Popup = () => {
   const [importedPaste, setImportedPaste] = useState(null);
   const [recentShareResults, setRecentShareResults] = useState({});
 
+
   const themeStyles = {
     container: isDark 
-      ? "bg-gradient-to-b from-black via-black to-gray-900" 
-      : "bg-gradient-to-br from-white via-blue-50 to-blue-100",
-    text: isDark ? "text-white" : "text-gray-900",
-    cardBg: isDark ? "bg-gray-900/50" : "bg-white",
-    cardBorder: isDark ? "border-gray-700/50" : "border-blue-200",
-    cardShadow: isDark ? "shadow-orange-900/20" : "shadow-blue-500/10",
-    inputBg: isDark ? "bg-gray-900/50" : "bg-white",
-    inputBorder: isDark ? "border-gray-700/50" : "border-blue-200",
-    inputText: isDark ? "text-white placeholder-gray-400" : "text-gray-900 placeholder-blue-400/70",
+      ? "bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900" 
+      : "bg-gradient-to-br from-slate-50 via-white to-blue-50",
+    text: isDark ? "text-gray-100" : "text-gray-800",
+    cardBg: isDark ? "bg-gray-800/80 backdrop-blur-sm" : "bg-white/80 backdrop-blur-sm",
+    cardBorder: isDark ? "border-gray-700/60" : "border-gray-200/60",
+    cardShadow: isDark ? "shadow-2xl shadow-gray-900/40" : "shadow-xl shadow-blue-500/10",
+    inputBg: isDark ? "bg-gray-900/60" : "bg-white/90",
+    inputBorder: isDark ? "border-gray-600/50" : "border-gray-300/50",
+    inputText: isDark ? "text-gray-100 placeholder-gray-400" : "text-gray-800 placeholder-gray-500",
     buttonPrimary: isDark 
-      ? "bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white" 
-      : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white",
+      ? "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg shadow-orange-500/25" 
+      : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white shadow-lg shadow-blue-500/25",
     buttonSecondary: isDark 
-      ? "bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-600" 
-      : "bg-blue-100 hover:bg-blue-200 text-blue-700 border border-blue-200",
-    tabBg: isDark ? "from-black to-gray-900" : "from-blue-50 to-blue-100",
+      ? "bg-gray-700/80 hover:bg-gray-600/80 text-gray-200 border border-gray-600/50 shadow-lg shadow-gray-900/20" 
+      : "bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200/60 shadow-md shadow-gray-500/10",
+    tabBg: isDark ? "from-gray-800 to-gray-900" : "from-white to-gray-50",
     tabActive: isDark 
-      ? "bg-gray-800 border-orange-500 text-white" 
-      : "bg-white border-blue-500 text-blue-700",
+      ? "bg-gray-700/80 border-b-2 border-orange-500 text-orange-400 shadow-lg shadow-orange-500/20" 
+      : "bg-white border-b-2 border-blue-500 text-blue-600 shadow-lg shadow-blue-500/10",
     tabInactive: isDark 
-      ? "text-gray-400 hover:text-gray-200" 
-      : "text-blue-600 hover:text-blue-800",
+      ? "text-gray-400 hover:text-gray-200 hover:bg-gray-800/50" 
+      : "text-gray-600 hover:text-gray-800 hover:bg-gray-50",
     headerBg: isDark 
-      ? "bg-gradient-to-b from-black to-gray-900" 
-      : "bg-gradient-to-r from-white via-blue-50 to-blue-100",
-    successBg: isDark ? "bg-gray-800/70" : "bg-green-50",
-    successBorder: isDark ? "border-gray-600" : "border-green-200",
-    successText: isDark ? "text-gray-200" : "text-green-800",
-    successButton: isDark ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-green-600 hover:bg-green-700 text-white",
-    shareBg: isDark ? "bg-gray-800/70" : "bg-purple-50",
-    shareBorder: isDark ? "border-gray-600" : "border-purple-200",
-    shareText: isDark ? "text-gray-200" : "text-purple-800",
-    shareButton: isDark ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-purple-600 hover:bg-purple-700 text-white",
-    shareAccent: isDark ? "text-gray-400" : "text-purple-600",
-    importBg: isDark ? "bg-gray-800/70" : "bg-blue-50",
-    importBorder: isDark ? "border-gray-600" : "border-blue-200",
-    importText: isDark ? "text-gray-200" : "text-blue-800",
-    importButton: isDark ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-blue-600 hover:bg-blue-700 text-white",
-    importAccent: isDark ? "text-gray-400" : "text-blue-600",
+      ? "bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900" 
+      : "bg-gradient-to-r from-white via-blue-50 to-indigo-50",
+    successBg: isDark ? "bg-green-900/30 backdrop-blur-sm" : "bg-green-50 backdrop-blur-sm",
+    successBorder: isDark ? "border-green-700/50" : "border-green-200/60",
+    successText: isDark ? "text-green-300" : "text-green-800",
+    successButton: isDark ? "bg-green-700 hover:bg-green-600 text-white shadow-lg shadow-green-700/25" : "bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-500/25",
+    shareBg: isDark ? "bg-orange-900/30 backdrop-blur-sm" : "bg-purple-50 backdrop-blur-sm",
+    shareBorder: isDark ? "border-orange-700/50" : "border-purple-200/60",
+    shareText: isDark ? "text-orange-300" : "text-purple-800",
+    shareButton: isDark ? "bg-orange-700 hover:bg-orange-600 text-white shadow-lg shadow-orange-700/25" : "bg-purple-600 hover:bg-purple-700 text-white shadow-lg shadow-purple-500/25",
+    shareAccent: isDark ? "text-orange-400" : "text-purple-600",
+    importBg: isDark ? "bg-blue-900/30 backdrop-blur-sm" : "bg-blue-50 backdrop-blur-sm",
+    importBorderBorder: isDark ? "border-blue-700/50" : "border-blue-200/60",
+    importText: isDark ? "text-blue-300" : "text-blue-800",
+    importButton: isDark ? "bg-blue-700 hover:bg-blue-600 text-white shadow-lg shadow-blue-700/25" : "bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/25",
+    importAccent: isDark ? "text-blue-400" : "text-blue-600",
   };
+
 
   useEffect(() => {
     chrome.storage.local.get(["recentPastes"], (result) => {
@@ -89,17 +92,20 @@ const Popup = () => {
     });
   }, []);
 
+
   const saveRecentPaste = (paste) => {
     const newPastes = [paste, ...recentPastes.slice(0, 9)];
     setRecentPastes(newPastes);
     chrome.storage.local.set({ recentPastes: newPastes });
   };
 
+
   const clearRecentPastes = () => {
     setRecentPastes([]);
     setRecentShareResults({});
     chrome.storage.local.clear();
   };
+
 
   const getClipboardContent = async () => {
     try {
@@ -109,6 +115,7 @@ const Popup = () => {
       setError("Failed to read clipboard. Please paste manually.");
     }
   };
+
 
   const handleSave = async () => {
     setError("");
@@ -151,12 +158,16 @@ const Popup = () => {
       saveRecentPaste(newPaste);
       setContent("");
       
+      // Directly create share link
+      handleCreateShare(id);
+      
     } catch (err) {
       setError("Error connecting to backend.");
     } finally {
       setIsLoading(false);
     }
   };
+
 
   const handleCreateShare = async (pasteId) => {
     try {
@@ -181,6 +192,7 @@ const Popup = () => {
     }
   };
 
+
   const handleCreateShareFromRecent = async (pasteId) => {
     try {
       const res = await fetch(`${BACKEND_URL}/share`, {
@@ -202,6 +214,7 @@ const Popup = () => {
       setError("Error creating share link.");
     }
   };
+
 
   const handleImportPaste = async () => {
     setError("");
@@ -244,6 +257,7 @@ const Popup = () => {
     }
   };
 
+
   const useImportedPaste = () => {
     if (importedPaste) {
       setContent(importedPaste.content);
@@ -251,6 +265,7 @@ const Popup = () => {
       setImportedPaste(null);
     }
   };
+
 
   const copyToClipboard = async (text, key) => {
     try {
@@ -264,6 +279,7 @@ const Popup = () => {
     }
   };
 
+
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
     const now = new Date();
@@ -275,32 +291,41 @@ const Popup = () => {
     return `${Math.floor(diff / 86400000)}d ago`;
   };
 
+
   return (
     <div className={`h-full flex flex-col overflow-hidden ${themeStyles.container}`}>
       {/* Header */}
-      <div className={`p-6 shadow-lg ${themeStyles.headerBg}`}>
+      <div className={`p-6 shadow-2xl ${themeStyles.headerBg} relative`}>
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className={`w-8 h-8 ${isDark ? 'bg-orange-600' : 'bg-blue-600'} flex items-center justify-center`}>
-              <Database className="w-4 h-4 text-white" />
-            </div>
+          <div className="flex items-center gap-3">
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className={`w-10 h-10 rounded-xl ${isDark ? 'bg-gradient-to-br from-orange-500 to-red-500 shadow-lg shadow-orange-500/25' : 'bg-gradient-to-br from-blue-500 to-indigo-500 shadow-lg shadow-blue-500/25'} flex items-center justify-center`}
+            >
+              <Database className="w-5 h-5 text-white" />
+            </motion.div>
             <div>
-              <h1 className={`text-xl font-bold ${themeStyles.text}`}>BinStack</h1>
-              <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-blue-700/80'}`}>
+              <h1 className={`text-2xl font-bold ${themeStyles.text}`}>BinStack</h1>
+              <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                 Professional text sharing & storage
               </p>
             </div>
           </div>
-          <ThemeToggle />
+          <motion.div whileHover={{ scale: 1.05 }}>
+            <ThemeToggle />
+          </motion.div>
         </div>
+        {/* Decorative gradient line */}
+        <div className={`absolute bottom-0 left-0 right-0 h-1 ${isDark ? 'bg-gradient-to-r from-orange-500 to-red-500' : 'bg-gradient-to-r from-blue-500 to-indigo-500'}`}></div>
       </div>
 
+
       {/* Tab Navigation */}
-      <div className={`flex border-b ${themeStyles.cardBorder} bg-gradient-to-r ${themeStyles.tabBg}`}>
+      <div className={`flex border-b ${themeStyles.cardBorder} bg-gradient-to-r ${themeStyles.tabBg} relative`}>
         <button
           onClick={() => setActiveTab("create")}
           className={clsx(
-            "flex-1 py-3 px-4 text-sm font-medium transition-colors duration-200",
+            "flex-1 py-4 px-6 text-sm font-medium transition-all duration-300 rounded-t-lg relative",
             activeTab === "create" ? themeStyles.tabActive : themeStyles.tabInactive
           )}
         >
@@ -310,7 +335,7 @@ const Popup = () => {
         <button
           onClick={() => setActiveTab("import")}
           className={clsx(
-            "flex-1 py-3 px-4 text-sm font-medium transition-colors duration-200",
+            "flex-1 py-4 px-6 text-sm font-medium transition-all duration-300 rounded-t-lg relative",
             activeTab === "import" ? themeStyles.tabActive : themeStyles.tabInactive
           )}
         >
@@ -320,7 +345,7 @@ const Popup = () => {
         <button
           onClick={() => setActiveTab("recent")}
           className={clsx(
-            "flex-1 py-3 px-4 text-sm font-medium transition-colors duration-200",
+            "flex-1 py-4 px-6 text-sm font-medium transition-all duration-300 rounded-t-lg relative",
             activeTab === "recent" ? themeStyles.tabActive : themeStyles.tabInactive
           )}
         >
@@ -328,6 +353,7 @@ const Popup = () => {
           Recent ({recentPastes.length})
         </button>
       </div>
+
 
       {/* Content Area */}
       <div className="flex-1 overflow-hidden">
@@ -338,23 +364,29 @@ const Popup = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
               className="h-full p-6 flex flex-col"
             >
               {/* Clipboard Button */}
-              <div className="mb-4">
+              <motion.div 
+                whileHover={{ scale: 1.02 }}
+                className="mb-6"
+              >
                 <button
                   onClick={getClipboardContent}
-                  className={`w-full py-3 px-4 text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-2 ${themeStyles.buttonSecondary}`}
+                  className={`w-full py-3 px-4 text-sm font-medium transition-all duration-300 flex items-center justify-center gap-2 rounded-lg ${themeStyles.buttonSecondary}`}
                 >
                   <Clipboard className="w-4 h-4" />
                   Paste from Clipboard
                 </button>
-              </div>
+              </motion.div>
+
 
               {/* Text Area */}
-              <div className="flex-1 mb-4">
-                <textarea
-                  className={`w-full h-full border p-4 text-sm focus:outline-none focus:ring-2 ${isDark ? 'focus:ring-orange-500' : 'focus:ring-blue-500'} focus:border-transparent resize-none ${themeStyles.inputBg} ${themeStyles.inputBorder} ${themeStyles.inputText}`}
+              <div className="flex-1 mb-6">
+                <motion.textarea
+                  whileFocus={{ scale: 1.01 }}
+                  className={`w-full h-full border-2 p-4 text-sm focus:outline-none focus:ring-2 ${isDark ? 'focus:ring-orange-500 focus:border-orange-500' : 'focus:ring-blue-500 focus:border-blue-500'} transition-all duration-300 resize-none rounded-lg ${themeStyles.inputBg} ${themeStyles.inputBorder} ${themeStyles.inputText}`}
                   placeholder="Enter your text here..."
                   maxLength={1048576}
                   value={content}
@@ -362,11 +394,17 @@ const Popup = () => {
                 />
               </div>
 
+
               {/* Character Count */}
-              <div className={`text-xs mb-4 flex items-center gap-1 ${themeStyles.text}`}>
-                <div className={`w-2 h-2 ${isDark ? 'bg-orange-500' : 'bg-blue-500'} rounded-full`}></div>
+              <div className={`text-xs mb-6 flex items-center gap-2 ${themeStyles.text}`}>
+                <motion.div 
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className={`w-2 h-2 ${isDark ? 'bg-orange-500' : 'bg-blue-500'} rounded-full`}
+                ></motion.div>
                 {content.length.toLocaleString()} characters
               </div>
+
 
               {/* Save Button */}
               <motion.button
@@ -375,99 +413,69 @@ const Popup = () => {
                 onClick={handleSave}
                 disabled={isLoading || !content.trim()}
                 className={clsx(
-                  "w-full py-3 px-6 font-medium transition-all duration-200 flex items-center justify-center gap-2 shadow-lg",
+                  "w-full py-4 px-6 font-medium transition-all duration-300 flex items-center justify-center gap-2 rounded-lg",
                   isLoading || !content.trim()
                     ? `${themeStyles.buttonSecondary} opacity-50 cursor-not-allowed`
-                    : `${themeStyles.buttonPrimary} ${isDark ? 'shadow-orange-500/25' : 'shadow-blue-500/25'} hover:shadow-xl`
+                    : `${themeStyles.buttonPrimary} hover:scale-105 hover:shadow-xl`
                 )}
               >
                 {isLoading ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     Creating...
                   </>
                 ) : (
                   <>
-                    <Plus className="w-4 h-4" />
+                    <Plus className="w-5 h-5" />
                     Create Paste
                   </>
                 )}
               </motion.button>
 
+
               {/* Error Message */}
               {error && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`mt-4 p-3 border text-sm flex items-center gap-2 ${isDark ? 'bg-red-900/30 border-red-700/30 text-red-300' : 'bg-red-50 border-red-200 text-red-700'}`}
+                  className={`mt-4 p-4 border-2 rounded-lg text-sm flex items-center gap-2 ${isDark ? 'bg-red-900/40 border-red-700/50 text-red-300' : 'bg-red-50 border-red-200 text-red-700'}`}
                 >
-                  <AlertCircle className="w-4 h-4" />
+                  <AlertCircle className="w-5 h-5" />
                   {error}
                 </motion.div>
               )}
 
-              {/* Success Result - Localhost Link */}
-              {result && !shareResult && (
+
+              {/* Universal Share Result */}
+              {shareResult && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`mt-4 p-4 border ${themeStyles.successBg} ${themeStyles.successBorder}`}
+                  className={`mt-4 p-4 border-2 rounded-lg ${themeStyles.shareBg} ${themeStyles.shareBorder}`}
                 >
-                  <div className={`text-sm font-medium mb-2 ${themeStyles.successText}`}>
-                    Paste created successfully!
+                  <div className={`text-sm font-medium mb-3 flex items-center gap-2 ${themeStyles.shareText}`}>
+                    <Users className="w-4 h-4" />
+                    🔗 Universal Share Link Created!
                   </div>
                   <div className="flex items-center gap-2 mb-3">
                     <input
                       type="text"
-                      value={`http://localhost:3001/p/${result.id}`}
-                      readOnly
-                      className={`flex-1 px-3 py-2 border text-sm font-mono ${themeStyles.inputBg} ${themeStyles.inputBorder} ${themeStyles.inputText}`}
-                    />
-                    <button
-                      onClick={() => copyToClipboard(`http://localhost:3001/p/${result.id}`, 'result')}
-                      className={`px-3 py-2 text-sm transition-colors duration-200 ${themeStyles.successButton}`}
-                    >
-                      {copiedStates.result ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                    </button>
-                  </div>
-                  <button
-                    onClick={() => handleCreateShare(result.id)}
-                    className={`w-full py-2 px-4 text-sm transition-all duration-200 flex items-center justify-center gap-2 shadow-lg ${themeStyles.buttonPrimary}`}
-                  >
-                    <Share2 className="w-4 h-4" />
-                    Create Universal Share Link
-                  </button>
-                </motion.div>
-              )}
-
-              {/* Universal Share Result - Replaces Localhost Link */}
-              {shareResult && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`mt-4 p-4 border ${themeStyles.shareBg} ${themeStyles.shareBorder}`}
-                >
-                  <div className={`text-sm font-medium mb-2 flex items-center gap-2 ${themeStyles.shareText}`}>
-                    <Users className="w-4 h-4" />
-                    Universal Share Link Created!
-                  </div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <input
-                      type="text"
                       value={shareResult.shareUrl}
                       readOnly
-                      className={`flex-1 px-3 py-2 border text-sm font-mono ${themeStyles.inputBg} ${themeStyles.inputBorder} ${themeStyles.inputText}`}
+                      className={`flex-1 px-3 py-2 border rounded-lg text-sm font-mono ${themeStyles.inputBg} ${themeStyles.inputBorder} ${themeStyles.inputText}`}
                     />
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                       onClick={() => copyToClipboard(shareResult.shareUrl, 'share')}
-                      className={`px-3 py-2 text-sm transition-colors duration-200 ${themeStyles.shareButton}`}
+                      className={`px-3 py-2 text-sm transition-all duration-300 rounded-lg ${themeStyles.shareButton}`}
                     >
                       {copiedStates.share ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                    </button>
+                    </motion.button>
                   </div>
                   <div className={`text-xs flex items-center gap-1 ${themeStyles.shareAccent}`}>
                     <Clock className="w-3 h-3" />
-                    Expires in {shareResult.expirationHours} hours
+                    ⏰ Expires in {shareResult.expirationHours} hours
                   </div>
                 </motion.div>
               )}
@@ -478,95 +486,105 @@ const Popup = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
               className="h-full flex flex-col"
             >
               {/* Fixed height container for import form */}
               <div className="p-6 flex-shrink-0">
-                <h3 className={`font-medium mb-2 ${themeStyles.text}`}>Import Shared Paste</h3>
-                <p className={`text-sm mb-4 ${isDark ? 'text-gray-400' : 'text-blue-700/70'}`}>
+                <h3 className={`font-semibold mb-2 text-lg ${themeStyles.text}`}>📥 Import Shared Paste</h3>
+                <p className={`text-sm mb-6 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                   Enter a universal share link to import paste content from another device.
                 </p>
                 
-                <div className="space-y-3">
-                  <input
+                <div className="space-y-4">
+                  <motion.input
+                    whileFocus={{ scale: 1.01 }}
                     type="text"
                     placeholder="pastebin:abc123def456"
                     value={importUrl}
                     onChange={(e) => setImportUrl(e.target.value)}
-                    className={`w-full px-4 py-3 border text-sm font-mono focus:outline-none focus:ring-2 ${isDark ? 'focus:ring-orange-500' : 'focus:ring-blue-500'} focus:border-transparent ${themeStyles.inputBg} ${themeStyles.inputBorder} ${themeStyles.inputText}`}
+                    className={`w-full px-4 py-3 border-2 text-sm font-mono focus:outline-none focus:ring-2 ${isDark ? 'focus:ring-orange-500 focus:border-orange-500' : 'focus:ring-blue-500 focus:border-blue-500'} transition-all duration-300 rounded-lg ${themeStyles.inputBg} ${themeStyles.inputBorder} ${themeStyles.inputText}`}
                   />
                   
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={handleImportPaste}
                     disabled={importLoading || !importUrl.trim()}
                     className={clsx(
-                      "w-full py-3 px-6 font-medium transition-all duration-200 flex items-center justify-center gap-2 shadow-lg",
+                      "w-full py-3 px-6 font-medium transition-all duration-300 flex items-center justify-center gap-2 rounded-lg",
                       importLoading || !importUrl.trim()
                         ? `${themeStyles.buttonSecondary} opacity-50 cursor-not-allowed`
-                        : `${themeStyles.buttonPrimary} ${isDark ? 'shadow-orange-500/25' : 'shadow-blue-500/25'} hover:shadow-xl`
+                        : `${themeStyles.buttonPrimary} hover:scale-105 hover:shadow-xl`
                     )}
                   >
                     {importLoading ? (
                       <>
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                         Importing...
                       </>
                     ) : (
                       <>
-                        <Search className="w-4 h-4" />
+                        <Search className="w-5 h-5" />
                         Import Paste
                       </>
                     )}
-                  </button>
+                  </motion.button>
                 </div>
               </div>
+
 
               {/* Scrollable area for results and errors */}
               <div className="flex-1 overflow-y-auto px-6 pb-6">
                 {/* Imported Paste Result */}
                 {importedPaste && (
                   <motion.div
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`p-4 border ${themeStyles.importBg} ${themeStyles.importBorder}`}
+                    className={`p-4 border-2 rounded-lg ${themeStyles.importBg} ${themeStyles.importBorder}`}
                   >
-                    <div className={`text-sm font-medium mb-2 ${themeStyles.importText}`}>
-                      Paste Imported Successfully!
+                    <div className={`text-sm font-medium mb-3 ${themeStyles.importText}`}>
+                      ✅ Paste Imported Successfully!
                     </div>
-                    <div className="mb-3">
-                      <div className={`text-xs mb-1 ${themeStyles.importAccent}`}>Preview:</div>
-                      <div className={`p-3 border max-h-40 overflow-y-auto text-sm font-mono ${themeStyles.cardBg} ${themeStyles.cardBorder} ${themeStyles.text}`}>
+                    <div className="mb-4">
+                      <div className={`text-xs mb-2 ${themeStyles.importAccent}`}>Preview:</div>
+                      <div className={`p-3 border rounded-lg max-h-40 overflow-y-auto text-sm font-mono ${themeStyles.cardBg} ${themeStyles.cardBorder} ${themeStyles.text}`}>
                         {importedPaste.content}
                       </div>
                     </div>
                     <div className="flex gap-2 mb-3">
-                      <button
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={useImportedPaste}
-                        className={`flex-1 py-2 px-4 text-sm transition-all duration-200 ${themeStyles.buttonPrimary}`}
+                        className={`flex-1 py-2 px-4 text-sm transition-all duration-300 rounded-lg ${themeStyles.buttonPrimary}`}
                       >
                         Use This Paste
-                      </button>
-                      <button
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         onClick={() => copyToClipboard(importedPaste.content, 'imported')}
-                        className={`px-4 py-2 text-sm transition-colors duration-200 ${themeStyles.importButton}`}
+                        className={`px-4 py-2 text-sm transition-all duration-300 rounded-lg ${themeStyles.importButton}`}
                       >
                         {copiedStates.imported ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                      </button>
+                      </motion.button>
                     </div>
                     <div className={`text-xs ${themeStyles.importAccent}`}>
-                      Access: {importedPaste.accessCount}/{importedPaste.maxAccess}
+                      📊 Access: {importedPaste.accessCount}/{importedPaste.maxAccess}
                     </div>
                   </motion.div>
                 )}
 
+
                 {/* Error Message */}
                 {error && (
                   <motion.div
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`p-3 border text-sm flex items-center gap-2 ${isDark ? 'bg-red-900/30 border-red-700/30 text-red-300' : 'bg-red-50 border-red-200 text-red-700'}`}
+                    className={`p-4 border-2 rounded-lg text-sm flex items-center gap-2 ${isDark ? 'bg-red-900/40 border-red-700/50 text-red-300' : 'bg-red-50 border-red-200 text-red-700'}`}
                   >
-                    <AlertCircle className="w-4 h-4" />
+                    <AlertCircle className="w-5 h-5" />
                     {error}
                   </motion.div>
                 )}
@@ -578,103 +596,106 @@ const Popup = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
               className="h-full flex flex-col"
             >
               {/* Recent Pastes Header */}
-              <div className={`p-4 border-b flex items-center justify-between ${themeStyles.cardBorder}`}>
-                <h3 className={`font-medium ${themeStyles.text}`}>Recent Pastes</h3>
+              <div className={`p-4 border-b-2 flex items-center justify-between ${themeStyles.cardBorder}`}>
+                <h3 className={`font-semibold text-lg ${themeStyles.text}`}>📋 Recent Pastes</h3>
                 {recentPastes.length > 0 && (
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={clearRecentPastes}
-                    className={`transition-colors duration-200 p-1 ${isDark ? 'text-gray-400 hover:text-red-400 hover:bg-red-500/20' : 'text-slate-400 hover:text-red-500 hover:bg-red-50'}`}
+                    className={`transition-all duration-300 p-2 rounded-lg ${isDark ? 'text-gray-400 hover:text-red-400 hover:bg-red-500/20' : 'text-gray-400 hover:text-red-500 hover:bg-red-50'}`}
                   >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                    <Trash2 className="w-5 h-5" />
+                  </motion.button>
                 )}
               </div>
+
 
               {/* Recent Pastes List */}
               <div className="flex-1 overflow-y-auto">
                 {recentPastes.length === 0 ? (
-                  <div className={`h-full flex items-center justify-center text-sm ${isDark ? 'text-gray-400' : 'text-blue-700/50'}`}>
+                  <div className={`h-full flex items-center justify-center text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                     <div className="text-center">
-                      <History className={`w-8 h-8 mx-auto mb-2 ${isDark ? 'text-gray-600' : 'text-blue-300'}`} />
-                      <p>No recent pastes</p>
-                      <p className="text-xs mt-1">Create your first paste!</p>
+                      <motion.div
+                        animate={{ scale: [1, 1.1, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        <History className={`w-12 h-12 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                      </motion.div>
+                      <p className="text-lg font-medium">No recent pastes</p>
+                      <p className="text-sm mt-1">Create your first paste!</p>
                     </div>
                   </div>
                 ) : (
-                  <div className="p-2 space-y-2">
-                    {recentPastes.map((paste) => (
+                  <div className="p-3 space-y-3">
+                    {recentPastes.map((paste, index) => (
                       <div key={paste.id}>
                         <motion.div
-                          initial={{ opacity: 0, y: 10 }}
+                          initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className={`p-3 border transition-colors duration-200 ${themeStyles.cardBg} ${themeStyles.cardBorder} ${themeStyles.cardShadow} ${isDark ? 'hover:bg-gray-800/70' : 'hover:bg-blue-50'}`}
+                          transition={{ delay: index * 0.1 }}
+                          whileHover={{ scale: 1.02 }}
+                          className={`p-4 border-2 transition-all duration-300 rounded-lg ${themeStyles.cardBg} ${themeStyles.cardBorder} ${themeStyles.cardShadow} ${isDark ? 'hover:bg-gray-700/60' : 'hover:bg-gray-50'}`}
                         >
-                          <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-start justify-between gap-3">
                             <div className="flex-1 min-w-0">
                               <div className={`text-sm font-mono truncate ${themeStyles.text}`}>
                                 {paste.content}
                               </div>
-                              <div className={`text-xs mt-1 ${isDark ? 'text-gray-400' : 'text-blue-600/50'}`}>
+                              <div className={`text-xs mt-2 flex items-center gap-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                <Clock className="w-3 h-3" />
                                 {formatTimestamp(paste.timestamp)}
                               </div>
                             </div>
                             <div className="flex items-center gap-1">
-                              <button
-                                onClick={() => copyToClipboard(`http://localhost:3001/p/${paste.id}`, `link-${paste.id}`)}
-                                className={`p-1.5 transition-colors duration-200 ${isDark ? 'text-gray-400 hover:text-orange-400 hover:bg-orange-500/20' : 'text-slate-400 hover:text-blue-600 hover:bg-blue-50'}`}
-                                title="Copy link"
-                              >
-                                {copiedStates[`link-${paste.id}`] ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                              </button>
-                              <button
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
                                 onClick={() => handleCreateShareFromRecent(paste.id)}
-                                className={`p-1.5 transition-colors duration-200 ${isDark ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700' : 'text-slate-400 hover:text-purple-600 hover:bg-purple-50'}`}
+                                className={`p-2 transition-all duration-300 rounded-lg ${isDark ? 'text-gray-400 hover:text-orange-400 hover:bg-orange-500/20' : 'text-gray-400 hover:text-purple-600 hover:bg-purple-50'}`}
                                 title="Create share link"
                               >
-                                <Share2 className="w-3 h-3" />
-                              </button>
-                              <button
-                                onClick={() => window.open(`http://localhost:3001/p/${paste.id}`, '_blank')}
-                                className={`p-1.5 transition-colors duration-200 ${isDark ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700' : 'text-slate-400 hover:text-green-600 hover:bg-green-50'}`}
-                                title="Open in new tab"
-                              >
-                                <ExternalLink className="w-3 h-3" />
-                              </button>
+                                <Share2 className="w-4 h-4" />
+                              </motion.button>
                             </div>
                           </div>
                         </motion.div>
 
+
                         {/* Share Result for Recent Paste */}
                         {recentShareResults[paste.id] && (
                           <motion.div
-                            initial={{ opacity: 0, y: 10 }}
+                            initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className={`mt-2 p-3 border ${themeStyles.shareBg} ${themeStyles.shareBorder}`}
+                            className={`mt-3 p-4 border-2 rounded-lg ${themeStyles.shareBg} ${themeStyles.shareBorder}`}
                           >
-                            <div className={`text-sm font-medium mb-2 flex items-center gap-2 ${themeStyles.shareText}`}>
+                            <div className={`text-sm font-medium mb-3 flex items-center gap-2 ${themeStyles.shareText}`}>
                               <Users className="w-4 h-4" />
-                              Universal Share Link Created!
+                              🔗 Universal Share Link Created!
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 mb-3">
                               <input
                                 type="text"
                                 value={recentShareResults[paste.id].shareUrl}
                                 readOnly
-                                className={`flex-1 px-3 py-2 border text-sm font-mono ${themeStyles.inputBg} ${themeStyles.inputBorder} ${themeStyles.inputText}`}
+                                className={`flex-1 px-3 py-2 border rounded-lg text-sm font-mono ${themeStyles.inputBg} ${themeStyles.inputBorder} ${themeStyles.inputText}`}
                               />
-                              <button
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
                                 onClick={() => copyToClipboard(recentShareResults[paste.id].shareUrl, `recent-share-${paste.id}`)}
-                                className={`px-3 py-2 text-sm transition-colors duration-200 ${themeStyles.shareButton}`}
+                                className={`px-3 py-2 text-sm transition-all duration-300 rounded-lg ${themeStyles.shareButton}`}
                               >
                                 {copiedStates[`recent-share-${paste.id}`] ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                              </button>
+                              </motion.button>
                             </div>
-                            <div className={`text-xs mt-2 flex items-center gap-1 ${themeStyles.shareAccent}`}>
+                            <div className={`text-xs flex items-center gap-1 ${themeStyles.shareAccent}`}>
                               <Clock className="w-3 h-3" />
-                              Expires in {recentShareResults[paste.id].expirationHours} hours
+                              ⏰ Expires in {recentShareResults[paste.id].expirationHours} hours
                             </div>
                           </motion.div>
                         )}
@@ -690,5 +711,6 @@ const Popup = () => {
     </div>
   );
 };
+
 
 export default Popup;
