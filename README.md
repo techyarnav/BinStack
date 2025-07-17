@@ -36,8 +36,32 @@ Built with modern technologies — C++ for high-performance file operations, Nod
 🚫 Zero Tracking — No analytics, no third-party data sharing
 
 🔒 Secure-by-Design — End-to-end controlled data flow
-
 #
+## 🖼️ Screenshots
+
+### Main Interface
+<div align="center">
+  <img src="assets/create_section.png" alt="BinStack Light Mode" width="400"/>
+  <img src="assets/create_section_1.png" width="400"/>
+</div>
+
+### End-to-End Encryption
+<div align="center">
+  <img src="assets/create_section_encrypted.png" alt="Encryption Toggle" width="400"/>
+  <img src="assets/encrypted_link_generated.png" width="400"/>
+  <p><em>Optional AES-256 encryption with secure share links</em></p>
+</div>
+
+### Cross-Device Sharing
+<div align="center">
+  <img src="assets/import_section.png" alt="Share Workflow" width="400"/>
+  <p><em>Universal share links work across all devices</em></p>
+</div>
+<div align="center">
+  <img src="assets/recents_section.png" width="400"/>
+</div>
+
+
 ## 🏗️ Architecture - Multi-Language Microservice Design with End-to-End Encryption
 
 ~~~
