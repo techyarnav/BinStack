@@ -5,6 +5,15 @@ const Share = require('./share.model');
 
 const router = express.Router();
 
+
+router.get('/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    service: 'binstack-backend'
+  });
+});
+
 function generateId() {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let id = '';
