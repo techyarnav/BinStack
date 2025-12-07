@@ -23,6 +23,7 @@ Perfect for developers, writers, and anyone who needs to quickly share text snip
 - **Cross-Device Import** — Retrieve shared pastes instantly on any device
 - **Smart History** — Quick access to your last 10 pastes
 - **One-Click Clipboard** — Seamless native clipboard integration
+- **Automatic Clipboard Tracking** — Automatically captures clipboard content and generates shareable links with one click
 
 ### User Experience
 - **Dark/Light Mode** — Elegant theme switcher with system preference detection
@@ -65,7 +66,38 @@ Perfect for developers, writers, and anyone who needs to quickly share text snip
 
 #
 
+### Clipboard Tracking
+<div align="center">
+  <img src="assets/clipboard.png" alt="Clipboard Tracking" width="400"/>
+  <p><em>Automated Clipboard Pastes</em></p>
+</div>
+
 ## Installation & Setup
+
+### Quick Start (Pre-built Extension)
+
+**Don't want to build? Download the ready-to-use extension:**
+
+1. **Download the Build Folder**
+   - Download from: [Google Drive - Build Folder](https://drive.google.com/drive/folders/1FTTCqWtqvn-DJybmyzdxNyR6P46kXUEU?usp=sharing)
+   - Extract the `build` folder to your computer
+
+2. **Load Extension in Browser**
+   - Open Chrome or Brave browser
+   - Navigate to `chrome://extensions` or `brave://extensions`
+   - Enable **Developer Mode** (toggle in top-right corner)
+   - Click **Load Unpacked**
+   - Select the downloaded `build` folder
+
+3. **Start Using BinStack!**
+   - Click the BinStack icon in your browser toolbar
+   - Start creating and sharing pastes!
+
+---
+
+### Build from Source
+
+**Want to build it yourself or make changes?**
 
 ### Prerequisites
 
@@ -124,6 +156,12 @@ npm run build
 2. Paste the share link (format: `pastebin:abc123def456` or `pastebin:abc123def456#key` for encrypted)
 3. Click **Import Paste**
 4. Use the imported content or copy it to clipboard
+
+### Clipboard History
+- **Automatic Tracking** — The extension automatically tracks everything you copy in your browser
+- **Clipboard Tab** — View all your clipboard items in the dedicated Clipboard tab
+- **One-Click Sharing** — Click any clipboard item to instantly create a paste and generate a shareable link
+- **Persistent Storage** — Clipboard history is saved and persists across browser sessions
 
 ### Recent Pastes
 - View your last 10 pastes in the **Recent** tab

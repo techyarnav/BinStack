@@ -22,7 +22,7 @@ import { useTheme } from '../contexts/ThemeContext'
 import ThemeToggle from './ThemeToggle'
 
 // const BACKEND_URL = "http://localhost:3001";
-const BACKEND_URL = 'https://binstack-backend-59021fc50595.herokuapp.com' // Backend URL for production (Deployed on Heroku)
+const BACKEND_URL = 'http://72.60.222.16:8080';
 
 const Popup = () => {
   const { isDark } = useTheme()
@@ -39,6 +39,8 @@ const Popup = () => {
   const [importedPaste, setImportedPaste] = useState(null)
   const [recentShareResults, setRecentShareResults] = useState({})
   const [isEncrypted, setIsEncrypted] = useState(false)
+  const [clipboardHistory, setClipboardHistory] = useState([])
+  const [clipboardShareResults, setClipboardShareResults] = useState({})
 
   const themeStyles = {
     container: isDark
@@ -107,11 +109,53 @@ const Popup = () => {
   }
 
   useEffect(() => {
-    chrome.storage.local.get(['recentPastes'], result => {
+    chrome.storage.local.get(['recentPastes', 'clipboardHistory'], result => {
       if (result.recentPastes) {
         setRecentPastes(result.recentPastes)
       }
+      if (result.clipboardHistory) {
+        setClipboardHistory(result.clipboardHistory)
+      }
     })
+  }, [])
+
+  useEffect(() => {
+    let lastClipboardText = ''
+    let clipboardCheckInterval
+
+    const checkClipboard = async () => {
+      try {
+        const text = await navigator.clipboard.readText()
+        if (text && text !== lastClipboardText && text.trim().length > 0) {
+          lastClipboardText = text
+          setClipboardHistory(prevHistory => {
+            // Avoid duplicates
+            if (prevHistory.some(item => item.fullContent === text)) {
+              return prevHistory
+            }
+            const newClipboardItem = {
+              id: Date.now().toString(),
+              content: text.length > 100 ? text.substring(0, 100) + '...' : text,
+              fullContent: text,
+              timestamp: Date.now()
+            }
+            const updatedHistory = [newClipboardItem, ...prevHistory].slice(0, 20)
+            chrome.storage.local.set({ clipboardHistory: updatedHistory })
+            return updatedHistory
+          })
+        }
+      } catch (err) {
+        console.log('Clipboard access not available:', err)
+      }
+    }
+
+    clipboardCheckInterval = setInterval(checkClipboard, 1000)
+
+    return () => {
+      if (clipboardCheckInterval) {
+        clearInterval(clipboardCheckInterval)
+      }
+    }
   }, [])
 
   const saveRecentPaste = paste => {
@@ -123,7 +167,72 @@ const Popup = () => {
   const clearRecentPastes = () => {
     setRecentPastes([])
     setRecentShareResults({})
-    chrome.storage.local.clear()
+    chrome.storage.local.set({ recentPastes: [] })
+  }
+
+  const clearClipboardHistory = () => {
+    setClipboardHistory([])
+    setClipboardShareResults({})
+    chrome.storage.local.set({ clipboardHistory: [] })
+  }
+
+  const handleCreateShareFromClipboard = async (clipboardItem) => {
+    try {
+      setIsLoading(true)
+      setError('')
+
+      // Create paste from clipboard content
+      const res = await fetch(`${BACKEND_URL}/paste`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: clipboardItem.fullContent, encrypted: false })
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        setError(data.error || 'Failed to create paste.')
+        setIsLoading(false)
+        return
+      }
+
+      const { id } = await res.json()
+
+      // Create share link
+      const shareRes = await fetch(`${BACKEND_URL}/share`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pasteId: id, expirationHours: 24 })
+      })
+
+      if (!shareRes.ok) {
+        const data = await shareRes.json()
+        setError(data.error || 'Failed to create share.')
+        setIsLoading(false)
+        return
+      }
+
+      const shareData = await shareRes.json()
+
+      setClipboardShareResults({
+        ...clipboardShareResults,
+        [clipboardItem.id]: { ...shareData, shareUrl: shareData.shareUrl }
+      })
+
+      // Also add to recent pastes
+      const newPaste = {
+        id,
+        content: clipboardItem.content,
+        timestamp: Date.now(),
+        encrypted: false
+      }
+      saveRecentPaste(newPaste)
+
+      setIsLoading(false)
+    } catch (err) {
+      console.error('Error creating share from clipboard:', err)
+      setError('Error creating share link.')
+      setIsLoading(false)
+    }
   }
 
   const getClipboardContent = async () => {
@@ -441,6 +550,18 @@ const Popup = () => {
         >
           <Download className='w-4 h-4 inline mr-2' />
           Import
+        </button>
+        <button
+          onClick={() => setActiveTab('clipboard')}
+          className={clsx(
+            'flex-1 py-4 px-6 text-sm font-medium transition-all duration-300 rounded-t-lg relative',
+            activeTab === 'clipboard'
+              ? themeStyles.tabActive
+              : themeStyles.tabInactive
+          )}
+        >
+          <Clipboard className='w-4 h-4 inline mr-2' />
+          Clipboard ({clipboardHistory.length})
         </button>
         <button
           onClick={() => setActiveTab('recent')}
@@ -803,6 +924,173 @@ const Popup = () => {
                     <AlertCircle className='w-5 h-5' />
                     {error}
                   </motion.div>
+                )}
+              </div>
+            </motion.div>
+          ) : activeTab === 'clipboard' ? (
+            <motion.div
+              key='clipboard'
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
+              className='h-full flex flex-col'
+            >
+              {/* Clipboard History Header */}
+              <div
+                className={`p-4 border-b-2 flex items-center justify-between ${themeStyles.cardBorder}`}
+              >
+                <h3 className={`font-semibold text-lg ${themeStyles.text}`}>
+                  📋 Clipboard History
+                </h3>
+                {clipboardHistory.length > 0 && (
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={clearClipboardHistory}
+                    className={`transition-all duration-300 p-2 rounded-lg ${
+                      isDark
+                        ? 'text-gray-400 hover:text-red-400 hover:bg-red-500/20'
+                        : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
+                    }`}
+                  >
+                    <Trash2 className='w-5 h-5' />
+                  </motion.button>
+                )}
+              </div>
+
+              {/* Clipboard History List */}
+              <div className='flex-1 overflow-y-auto'>
+                {clipboardHistory.length === 0 ? (
+                  <div
+                    className={`h-full flex items-center justify-center text-sm ${
+                      isDark ? 'text-gray-400' : 'text-gray-600'
+                    }`}
+                  >
+                    <div className='text-center'>
+                      <motion.div
+                        animate={{ scale: [1, 1.1, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        <Clipboard
+                          className={`w-12 h-12 mx-auto mb-4 ${
+                            isDark ? 'text-gray-600' : 'text-gray-300'
+                          }`}
+                        />
+                      </motion.div>
+                      <p className='text-lg font-medium'>No clipboard items</p>
+                      <p className='text-sm mt-1'>Copy something in your browser to see it here!</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className='p-3 space-y-3'>
+                    {clipboardHistory.map((item, index) => (
+                      <div key={item.id}>
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          whileHover={{ scale: 1.02 }}
+                          className={`p-4 border-2 transition-all duration-300 rounded-lg cursor-pointer ${
+                            themeStyles.cardBg
+                          } ${themeStyles.cardBorder} ${
+                            themeStyles.cardShadow
+                          } ${
+                            isDark ? 'hover:bg-gray-700/60' : 'hover:bg-gray-50'
+                          }`}
+                          onClick={() => handleCreateShareFromClipboard(item)}
+                        >
+                          <div className='flex items-start justify-between gap-3'>
+                            <div className='flex-1 min-w-0'>
+                              <div
+                                className={`text-sm font-mono truncate flex items-center gap-2 ${themeStyles.text}`}
+                              >
+                                {item.content}
+                              </div>
+                              <div
+                                className={`text-xs mt-2 flex items-center gap-1 ${
+                                  isDark ? 'text-gray-400' : 'text-gray-500'
+                                }`}
+                              >
+                                <Clock className='w-3 h-3' />
+                                {formatTimestamp(item.timestamp)}
+                              </div>
+                              <div
+                                className={`text-xs mt-1 ${
+                                  isDark ? 'text-gray-500' : 'text-gray-400'
+                                }`}
+                              >
+                                Click to create shareable link
+                              </div>
+                            </div>
+                            <div className='flex items-center gap-1'>
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleCreateShareFromClipboard(item)
+                                }}
+                                className={`p-2 transition-all duration-300 rounded-lg ${
+                                  isDark
+                                    ? 'text-gray-400 hover:text-orange-400 hover:bg-orange-500/20'
+                                    : 'text-gray-400 hover:text-purple-600 hover:bg-purple-50'
+                                }`}
+                                title='Create share link'
+                              >
+                                <Share2 className='w-4 h-4' />
+                              </motion.button>
+                            </div>
+                          </div>
+                        </motion.div>
+                        {clipboardShareResults[item.id] && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className={`mt-3 p-4 border-2 rounded-lg ${themeStyles.shareBg} ${themeStyles.shareBorder}`}
+                          >
+                            <div
+                              className={`text-sm font-medium mb-3 flex items-center gap-2 ${themeStyles.shareText}`}
+                            >
+                              <Users className='w-4 h-4' />
+                              🔗 Share Link Created!
+                            </div>
+                            <div className='flex items-center gap-2 mb-3'>
+                              <input
+                                type='text'
+                                value={clipboardShareResults[item.id].shareUrl}
+                                readOnly
+                                className={`flex-1 px-3 py-2 border rounded-lg text-sm font-mono ${themeStyles.inputBg} ${themeStyles.inputBorder} ${themeStyles.inputText}`}
+                              />
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() =>
+                                  copyToClipboard(
+                                    clipboardShareResults[item.id].shareUrl,
+                                    `clipboard-share-${item.id}`
+                                  )
+                                }
+                                className={`px-3 py-2 text-sm transition-all duration-300 rounded-lg ${themeStyles.shareButton}`}
+                              >
+                                {copiedStates[`clipboard-share-${item.id}`] ? (
+                                  <Check className='w-4 h-4' />
+                                ) : (
+                                  <Copy className='w-4 h-4' />
+                                )}
+                              </motion.button>
+                            </div>
+                            <div
+                              className={`text-xs flex items-center gap-1 ${themeStyles.shareAccent}`}
+                            >
+                              <Clock className='w-3 h-3' />⏰ Expires in{' '}
+                              {clipboardShareResults[item.id].expirationHours} hours
+                            </div>
+                          </motion.div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             </motion.div>
