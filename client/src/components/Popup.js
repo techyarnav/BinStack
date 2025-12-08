@@ -22,7 +22,7 @@ import { useTheme } from '../contexts/ThemeContext'
 import ThemeToggle from './ThemeToggle'
 
 // const BACKEND_URL = "http://localhost:3001";
-const BACKEND_URL = 'http://72.60.222.16:8080';
+const BACKEND_URL = 'https://binstack.onrender.com';
 
 const Popup = () => {
   const { isDark } = useTheme()
